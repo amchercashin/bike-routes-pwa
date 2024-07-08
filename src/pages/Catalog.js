@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 function Catalog() {
-  // В будущем здесь будет логика загрузки маршрутов
   const routes = [
     { id: 1, name: "Маршрут по парку" },
     { id: 2, name: "Горная трасса" },
