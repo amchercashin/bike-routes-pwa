@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/bike-routes-pwa/static/css/main.e6c13ad2.css",
+    "main.js": "/bike-routes-pwa/static/js/main.f12bceb1.js",
+    "static/js/453.64ae4714.chunk.js": "/bike-routes-pwa/static/js/453.64ae4714.chunk.js",
+    "service-worker.js": "/bike-routes-pwa/service-worker.js",
+    "index.html": "/bike-routes-pwa/index.html",
+    "main.e6c13ad2.css.map": "/bike-routes-pwa/static/css/main.e6c13ad2.css.map",
+    "main.f12bceb1.js.map": "/bike-routes-pwa/static/js/main.f12bceb1.js.map",
+    "453.64ae4714.chunk.js.map": "/bike-routes-pwa/static/js/453.64ae4714.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.f12bceb1.js"
+  ]
+}
