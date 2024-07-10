@@ -24,7 +24,7 @@ function BoundsAdjuster({ bounds }) {
   return null;
 }
 
-function RouteMap({ route, position, heading }) {
+function RouteMap({ route, position, heading, isOffline }) {
   const { bounds, routeLines, routePoints } = useMemo(() => {
     if (!route || (!route.lines && !route.points)) {
       return { bounds: null, routeLines: [], routePoints: [] };
@@ -96,7 +96,7 @@ function RouteMap({ route, position, heading }) {
         style={{
           position: 'absolute',
           bottom: 0,
-          right:220,
+          right: 220,
           backgroundColor: 'white',
           padding: '0 5px',
           fontSize: '12px',
@@ -105,6 +105,21 @@ function RouteMap({ route, position, heading }) {
       >
         🇷🇺
       </div>
+      {isOffline && (
+        <div 
+          style={{
+            position: 'absolute',
+            top: 10,
+            left: 10,
+            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            padding: '5px 10px',
+            borderRadius: '5px',
+            zIndex: 1000
+          }}
+        >
+          Офлайн-режим: карта может быть неполной
+        </div>
+      )}
     </div>
   );
 }
@@ -122,7 +137,8 @@ RouteMap.propTypes = {
     latitude: PropTypes.number,
     longitude: PropTypes.number
   }),
-  heading: PropTypes.number
+  heading: PropTypes.number,
+  isOffline: PropTypes.bool
 };
 
 export default RouteMap;

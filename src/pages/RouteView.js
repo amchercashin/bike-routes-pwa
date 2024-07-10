@@ -12,34 +12,51 @@ function RouteView() {
   const { position, heading } = useGeolocation();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   useEffect(() => {
     async function loadRoute() {
       try {
         setLoading(true);
-        const response = await fetch(`${process.env.PUBLIC_URL}/data/routes/index.json`);
-        const routesInfo = await response.json();
-        const routeInfo = routesInfo.find(r => r.id === id);
+        let routeData = await getRoute(id);
 
-        if (!routeInfo) {
-          throw new Error('Route info not found');
-        }
+        if (!routeData || !isOffline) {
+          const response = await fetch(`${process.env.PUBLIC_URL}/data/routes/index.json`);
+          const routesInfo = await response.json();
+          const routeInfo = routesInfo.find(r => r.id === id);
 
-        let localVersion = await getRouteVersion(id).catch(() => null);
-        
-        let routeData;
-        if (localVersion !== routeInfo.version) {
-          const kmlResponse = await fetch(`${process.env.PUBLIC_URL}/data/routes/${id}.kml`);
-          const kmlBlob = await kmlResponse.blob();
-          const geojson = await parseKml(new File([kmlBlob], `${id}.kml`));
-          routeData = extractRouteFromGeoJSON(geojson);
+          if (!routeInfo) {
+            throw new Error('Route info not found');
+          }
+
+          let localVersion = await getRouteVersion(id).catch(() => null);
           
-          routeData.id = id;
-          routeData.version = routeInfo.version;
-          
-          await saveRoute(routeData).catch(console.error);
-        } else {
-          routeData = await getRoute(id);
+          if (localVersion !== routeInfo.version) {
+            const kmlResponse = await fetch(`${process.env.PUBLIC_URL}/data/routes/${id}.kml`);
+            const kmlBlob = await kmlResponse.blob();
+            const geojson = await parseKml(new File([kmlBlob], `${id}.kml`));
+            routeData = extractRouteFromGeoJSON(geojson);
+            
+            routeData.id = id;
+            routeData.version = routeInfo.version;
+            
+            await saveRoute(routeData).catch(console.error);
+          } else if (!routeData) {
+            routeData = await getRoute(id);
+          }
         }
         
         setRoute(routeData);
@@ -52,7 +69,7 @@ function RouteView() {
     }
 
     loadRoute();
-  }, [id]);
+  }, [id, isOffline]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -76,8 +93,9 @@ function RouteView() {
       <h1>{safeRender(route.name)}</h1>
       {safeRender(route.description)}
       <UserLocation />
-      <RouteMap route={route} position={position} heading={heading} />
+      <RouteMap route={route} position={position} heading={heading} isOffline={isOffline} />
       <Link to="/catalog">Назад к каталогу</Link>
+      {isOffline && <div>Вы находитесь в офлайн-режиме. Некоторые функции могут быть недоступны.</div>}
     </div>
   );
 }
