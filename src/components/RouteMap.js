@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -26,33 +26,11 @@ function BoundsAdjuster({ bounds }) {
 }
 
 function FullscreenControl({ isFullscreen, toggleFullscreen }) {
-  const map = useMapEvents({
-    fullscreenchange: () => {
-      toggleFullscreen(document.fullscreenElement !== null);
-    }
-  });
+  const map = useMapEvents({});
 
-  const handleFullscreenToggle = useCallback(() => {
-    if (!isFullscreen) {
-      if (map.getContainer().requestFullscreen) {
-        map.getContainer().requestFullscreen();
-      } else if (map.getContainer().mozRequestFullScreen) { // Firefox
-        map.getContainer().mozRequestFullScreen();
-      } else if (map.getContainer().webkitRequestFullscreen) { // Chrome, Safari and Opera
-        map.getContainer().webkitRequestFullscreen();
-      } else if (map.getContainer().msRequestFullscreen) { // IE/Edge
-        map.getContainer().msRequestFullscreen();
-      }
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.mozCancelFullScreen) { // Firefox
-        document.mozCancelFullScreen();
-      } else if (document.webkitExitFullscreen) { // Chrome, Safari and Opera
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) { // IE/Edge
-        document.msExitFullscreen();
-      }
+  useEffect(() => {
+    if (isFullscreen) {
+      map.invalidateSize();
     }
   }, [isFullscreen, map]);
 
@@ -60,7 +38,7 @@ function FullscreenControl({ isFullscreen, toggleFullscreen }) {
     <div className="leaflet-top leaflet-right">
       <div className="leaflet-control leaflet-bar">
         <button 
-          onClick={handleFullscreenToggle}
+          onClick={toggleFullscreen}
           title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
           className="fullscreen-button"
           aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
@@ -101,6 +79,10 @@ function GeolocationControls({ getLocation, isTracking, toggleTracking }) {
 function RouteMap({ route, isOffline }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const { position, lastKnownPosition, heading, isTracking, getLocation, toggleTracking } = useGeolocation();
+
+  const toggleFullscreen = useCallback(() => {
+    setIsFullscreen(prev => !prev);
+  }, []);
 
   const { bounds, routeLines, routePoints } = useMemo(() => {
     if (!route || (!route.lines && !route.points)) {
@@ -178,7 +160,7 @@ function RouteMap({ route, isOffline }) {
           </Marker>
         )}
         <BoundsAdjuster bounds={bounds} />
-        <FullscreenControl isFullscreen={isFullscreen} toggleFullscreen={setIsFullscreen} />
+        <FullscreenControl isFullscreen={isFullscreen} toggleFullscreen={toggleFullscreen} />
         <GeolocationControls getLocation={getLocation} isTracking={isTracking} toggleTracking={toggleTracking} />
       </MapContainer>
       <div 

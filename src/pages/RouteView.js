@@ -10,6 +10,7 @@ function RouteView() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
@@ -23,6 +24,10 @@ function RouteView() {
       window.removeEventListener('offline', handleOffline);
     };
   }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle('fullscreen-active', isFullscreen);
+  }, [isFullscreen]);
 
   useEffect(() => {
     async function loadRoute() {
@@ -86,12 +91,17 @@ function RouteView() {
   };
 
   return (
-    <div>
-      <h1>{safeRender(route.name)}</h1>
-      {safeRender(route.description)}
-      <RouteMap route={route} isOffline={isOffline} />
-      <Link to="/catalog">Назад к каталогу</Link>
-      {isOffline && <div>Вы находитесь в офлайн-режиме. Некоторые функции могут быть недоступны.</div>}
+    <div className={isFullscreen ? 'fullscreen-view' : ''}>
+      {!isFullscreen && <h1>{safeRender(route.name)}</h1>}
+      {!isFullscreen && safeRender(route.description)}
+      <RouteMap 
+        route={route} 
+        isOffline={isOffline} 
+        isFullscreen={isFullscreen}
+        setIsFullscreen={setIsFullscreen}
+      />
+      {!isFullscreen && <Link to="/catalog">Назад к каталогу</Link>}
+      {isOffline && !isFullscreen && <div>Вы находитесь в офлайн-режиме. Некоторые функции могут быть недоступны.</div>}
     </div>
   );
 }

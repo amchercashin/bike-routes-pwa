@@ -2,6 +2,7 @@
   position: relative;
   height: 400px;
   width: 100%;
+  transition: all 0.3s ease;
 }
 
 .map-container.fullscreen {
@@ -13,6 +14,7 @@
   z-index: 9999;
   height: 100vh;
   width: 100vw;
+  background-color: #fff;
 }
 
 .user-marker {
@@ -36,7 +38,7 @@
 }
 
 .geolocation-controls {
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.813);
   padding: 10px;
   border-radius: 5px;
   box-shadow: 0 1px 5px rgba(0,0,0,0.65);
@@ -68,7 +70,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: transparent;
+  background-color: #ffffffa7;
   border: none;
   cursor: pointer;
   padding: 0;
@@ -76,7 +78,7 @@
 }
 
 .fullscreen-button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: hsla(0, 0%, 0%, 0.4);
 }
 
 .fullscreen-button svg {
@@ -85,4 +87,8 @@
 
 .fullscreen-button:hover svg {
   stroke: #000;
+}
+
+body.fullscreen-active {
+  overflow: hidden;
 }
