@@ -9,7 +9,7 @@ import { parseKml, extractRouteFromGeoJSON } from '../utils/kmlParser';
 function RouteView() {
   const { id } = useParams();
   const [route, setRoute] = useState(null);
-  const { position, heading } = useGeolocation();
+  const { position, heading, isTracking } = useGeolocation();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
@@ -93,7 +93,7 @@ function RouteView() {
       <h1>{safeRender(route.name)}</h1>
       {safeRender(route.description)}
       <UserLocation />
-      <RouteMap route={route} position={position} heading={heading} isOffline={isOffline} />
+      <RouteMap route={route} position={position} heading={heading} isOffline={isOffline} isTracking={isTracking} />
       <Link to="/catalog">Назад к каталогу</Link>
       {isOffline && <div>Вы находитесь в офлайн-режиме. Некоторые функции могут быть недоступны.</div>}
     </div>

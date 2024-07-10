@@ -24,7 +24,7 @@ function BoundsAdjuster({ bounds }) {
   return null;
 }
 
-function RouteMap({ route, position, heading, isOffline }) {
+function RouteMap({ route, position, heading, isOffline, isTracking }) {
   const { bounds, routeLines, routePoints } = useMemo(() => {
     if (!route || (!route.lines && !route.points)) {
       return { bounds: null, routeLines: [], routePoints: [] };
@@ -85,7 +85,7 @@ function RouteMap({ route, position, heading, isOffline }) {
             </Popup>
           </Marker>
         ))}
-        {position && (
+        {position && (isTracking || !isTracking) && (
           <Marker position={[position.latitude, position.longitude]} icon={arrowIcon}>
             <Popup>Вы здесь</Popup>
           </Marker>
@@ -138,7 +138,8 @@ RouteMap.propTypes = {
     longitude: PropTypes.number
   }),
   heading: PropTypes.number,
-  isOffline: PropTypes.bool
+  isOffline: PropTypes.bool,
+  isTracking: PropTypes.bool
 };
 
 export default RouteMap;
