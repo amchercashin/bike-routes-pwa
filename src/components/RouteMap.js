@@ -24,7 +24,7 @@ function BoundsAdjuster({ bounds }) {
   return null;
 }
 
-function RouteMap({ route, position, heading, isOffline, isTracking }) {
+function RouteMap({ route, position, lastKnownPosition, heading, isOffline, isTracking }) {
   const { bounds, routeLines, routePoints } = useMemo(() => {
     if (!route || (!route.lines && !route.points)) {
       return { bounds: null, routeLines: [], routePoints: [] };
@@ -39,6 +39,8 @@ function RouteMap({ route, position, heading, isOffline, isTracking }) {
 
     if (position) {
       bounds.extend([position.latitude, position.longitude]);
+    } else if (lastKnownPosition) {
+      bounds.extend([lastKnownPosition.latitude, lastKnownPosition.longitude]);
     }
 
     return {
@@ -46,16 +48,19 @@ function RouteMap({ route, position, heading, isOffline, isTracking }) {
       routeLines: route.lines || [],
       routePoints: route.points || []
     };
-  }, [route, position]);
+  }, [route, position, lastKnownPosition]);
 
   if (!bounds) return null;
 
-  const arrowIcon = L.divIcon({
+  const createArrowIcon = (color) => L.divIcon({
     className: 'location-arrow',
-    html: `<div style="transform: rotate(${heading || 0}deg); color: red; font-size: 16px;">➤</div>`,
+    html: `<div style="transform: rotate(${heading || 0}deg); color: ${color}; font-size: 16px;">➤</div>`,
     iconSize: [24, 24],
     iconAnchor: [12, 12],
   });
+
+  const redArrowIcon = createArrowIcon('red');
+  const blackArrowIcon = createArrowIcon('black');
 
   const center = bounds.getCenter();
 
@@ -85,9 +90,14 @@ function RouteMap({ route, position, heading, isOffline, isTracking }) {
             </Popup>
           </Marker>
         ))}
-        {position && (isTracking || !isTracking) && (
-          <Marker position={[position.latitude, position.longitude]} icon={arrowIcon}>
-            <Popup>Вы здесь</Popup>
+        {isTracking && position && (
+          <Marker position={[position.latitude, position.longitude]} icon={redArrowIcon}>
+            <Popup>Вы здесь (активное отслеживание)</Popup>
+          </Marker>
+        )}
+        {!isTracking && lastKnownPosition && (
+          <Marker position={[lastKnownPosition.latitude, lastKnownPosition.longitude]} icon={blackArrowIcon}>
+            <Popup>Последнее известное местоположение</Popup>
           </Marker>
         )}
         <BoundsAdjuster bounds={bounds} />
@@ -134,6 +144,10 @@ RouteMap.propTypes = {
     }))
   }),
   position: PropTypes.shape({
+    latitude: PropTypes.number,
+    longitude: PropTypes.number
+  }),
+  lastKnownPosition: PropTypes.shape({
     latitude: PropTypes.number,
     longitude: PropTypes.number
   }),
