@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap } from 'react-
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../styles/RouteMap.css';
+import PropTypes from 'prop-types';
 
 const customIcon = new L.Icon({
   iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -24,13 +25,8 @@ function BoundsAdjuster({ bounds }) {
 }
 
 function RouteMap({ route, position, heading }) {
-  console.log('RouteMap received route:', route);
-  console.log('RouteMap received position:', position);
-  console.log('RouteMap received heading:', heading);
-
   const { bounds, routeLines, routePoints } = useMemo(() => {
     if (!route || (!route.lines && !route.points)) {
-      console.log('Invalid route data');
       return { bounds: null, routeLines: [], routePoints: [] };
     }
 
@@ -112,5 +108,21 @@ function RouteMap({ route, position, heading }) {
     </div>
   );
 }
+
+RouteMap.propTypes = {
+  route: PropTypes.shape({
+    lines: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number))),
+    points: PropTypes.arrayOf(PropTypes.shape({
+      name: PropTypes.string,
+      description: PropTypes.string,
+      coordinates: PropTypes.arrayOf(PropTypes.number)
+    }))
+  }),
+  position: PropTypes.shape({
+    latitude: PropTypes.number,
+    longitude: PropTypes.number
+  }),
+  heading: PropTypes.number
+};
 
 export default RouteMap;
