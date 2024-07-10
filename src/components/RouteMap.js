@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -32,23 +32,49 @@ function FullscreenControl({ isFullscreen, toggleFullscreen }) {
     }
   });
 
+  const handleFullscreenToggle = useCallback(() => {
+    if (!isFullscreen) {
+      if (map.getContainer().requestFullscreen) {
+        map.getContainer().requestFullscreen();
+      } else if (map.getContainer().mozRequestFullScreen) { // Firefox
+        map.getContainer().mozRequestFullScreen();
+      } else if (map.getContainer().webkitRequestFullscreen) { // Chrome, Safari and Opera
+        map.getContainer().webkitRequestFullscreen();
+      } else if (map.getContainer().msRequestFullscreen) { // IE/Edge
+        map.getContainer().msRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.mozCancelFullScreen) { // Firefox
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) { // Chrome, Safari and Opera
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) { // IE/Edge
+        document.msExitFullscreen();
+      }
+    }
+  }, [isFullscreen, map]);
+
   return (
-    <div className="leaflet-top leaflet-left">
+    <div className="leaflet-top leaflet-right">
       <div className="leaflet-control leaflet-bar">
-        <a 
-          href="#" 
-          onClick={(e) => {
-            e.preventDefault();
-            if (!isFullscreen) {
-              map.getContainer().requestFullscreen();
-            } else {
-              document.exitFullscreen();
-            }
-          }}
+        <button 
+          onClick={handleFullscreenToggle}
           title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+          className="fullscreen-button"
+          aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
         >
-          {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
-        </a>
+          {isFullscreen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+            </svg>
+          )}
+        </button>
       </div>
     </div>
   );
