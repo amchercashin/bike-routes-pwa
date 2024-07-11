@@ -1,24 +1,24 @@
 {
   "files": {
     "main.css": "/bike-routes-pwa/static/css/main.e6c13ad2.css",
-    "main.js": "/bike-routes-pwa/static/js/main.fe6598b3.js",
+    "main.js": "/bike-routes-pwa/static/js/main.8f365eab.js",
     "static/js/936.dc098d14.chunk.js": "/bike-routes-pwa/static/js/936.dc098d14.chunk.js",
     "static/js/832.8fe003bf.chunk.js": "/bike-routes-pwa/static/js/832.8fe003bf.chunk.js",
-    "static/css/140.59ec7035.chunk.css": "/bike-routes-pwa/static/css/140.59ec7035.chunk.css",
-    "static/js/140.fad3d5a1.chunk.js": "/bike-routes-pwa/static/js/140.fad3d5a1.chunk.js",
+    "static/css/499.65dd003d.chunk.css": "/bike-routes-pwa/static/css/499.65dd003d.chunk.css",
+    "static/js/499.fae163de.chunk.js": "/bike-routes-pwa/static/js/499.fae163de.chunk.js",
     "static/js/219.1d41236b.chunk.js": "/bike-routes-pwa/static/js/219.1d41236b.chunk.js",
     "service-worker.js": "/bike-routes-pwa/service-worker.js",
     "index.html": "/bike-routes-pwa/index.html",
     "main.e6c13ad2.css.map": "/bike-routes-pwa/static/css/main.e6c13ad2.css.map",
-    "main.fe6598b3.js.map": "/bike-routes-pwa/static/js/main.fe6598b3.js.map",
+    "main.8f365eab.js.map": "/bike-routes-pwa/static/js/main.8f365eab.js.map",
     "936.dc098d14.chunk.js.map": "/bike-routes-pwa/static/js/936.dc098d14.chunk.js.map",
     "832.8fe003bf.chunk.js.map": "/bike-routes-pwa/static/js/832.8fe003bf.chunk.js.map",
-    "140.59ec7035.chunk.css.map": "/bike-routes-pwa/static/css/140.59ec7035.chunk.css.map",
-    "140.fad3d5a1.chunk.js.map": "/bike-routes-pwa/static/js/140.fad3d5a1.chunk.js.map",
+    "499.65dd003d.chunk.css.map": "/bike-routes-pwa/static/css/499.65dd003d.chunk.css.map",
+    "499.fae163de.chunk.js.map": "/bike-routes-pwa/static/js/499.fae163de.chunk.js.map",
     "219.1d41236b.chunk.js.map": "/bike-routes-pwa/static/js/219.1d41236b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.fe6598b3.js"
+    "static/js/main.8f365eab.js"
   ]
 }
